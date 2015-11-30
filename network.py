@@ -1,17 +1,15 @@
 from __future__ import division
 import numpy as np
 
-class NeutralNetwork(object):
+class Network(object):
     def __init__(self, sizes):
         self.num_layers = len(sizes)
         self.sizes = sizes
         self.biases = [np.random.randn(y,1) for y in sizes[1:]]
-        self.weights = [np.random.randn(y,x)
-                        for x,y in zip(sizes[:-1], sizes[1:])]
+        self.weights = [np.random.randn(y,x) for x,y in zip(sizes[:-1], sizes[1:])]
 
     def cost_function(training, w, b):
         pass
-
 
     def sigmoid(z):
         return 1/(1+np.exp(-z))
