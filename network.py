@@ -39,11 +39,21 @@ class Network(object):
         x = np.reshape(x, (len(x), 1))
         y = np.reshape(y, (len(y), 1))
         zs, activations = self.feedforward(x)
-        delta_last = activations[-1] - y
+        nabla_w = [None]*(self.num_layers - 1)
+        nabla_b = [None]*(self.num_layers - 1)
+        delta = activations[-1] - y
+        nabla_b[-1] = delta
+        nabla_w[-1] = delta.dot(activations[-2].T)
+        for i in xrange(self.num_layers - 2, 0, -1):
+            delta = self.weights[i].T.dot(delta) * sigmoid_prime(zs[i-1])
+            nabla_b[i-1] = delta
+            nabla_w[i-1] = delta.dot(activations[i-1].T)
 
 def sigmoid(z):
     return 1/(1+np.exp(-z))
 
+def sigmoid_prime(z):
+    return sigmoid(z)*(1 - sigmoid(z))
 
 def reshape_y(in_ys):
     ys = np.zeros((len(in_ys), 10))
