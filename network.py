@@ -36,8 +36,10 @@ class Network(object):
                 self.back_prop(x, y)
 
     def back_prop(self, x, y):
+        x = np.reshape(x, (len(x), 1))
+        y = np.reshape(y, (len(y), 1))
         zs, activations = self.feedforward(x)
-
+        delta_last = activations[-1] - y
 
 def sigmoid(z):
     return 1/(1+np.exp(-z))
