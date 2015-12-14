@@ -32,10 +32,14 @@ class Network(object):
 
     def gradient_descent(self, iters, learning_rate):
         for i in xrange(iters):
+            delta_b = [np.zeros_like(bias) for bias in self.biases]
+            delta_w = [np.zeros_like(weight) for weight in self.weights]
             for x, y in zip(self.X, self.y):
-                self.back_prop(x, y)
+                nabla_b, nabla_w = self.backprop(x, y)
+                delta_b = [b + nb for b, nb in zip(delta_b, nabla_b)]
+                delta_w = [w + nw for w, nw in zip(delta_w, nabla_w)]
 
-    def back_prop(self, x, y):
+    def backprop(self, x, y):
         x = np.reshape(x, (len(x), 1))
         y = np.reshape(y, (len(y), 1))
         zs, activations = self.feedforward(x)
@@ -47,7 +51,8 @@ class Network(object):
         for i in xrange(self.num_layers - 2, 0, -1):
             delta = self.weights[i].T.dot(delta) * sigmoid_prime(zs[i-1])
             nabla_b[i-1] = delta
-            nabla_w[i-1] = delta.dot(activations[i-1].T)
+            nabla_w[i-1] = np.dot(activations[i-1].T, delta)
+        return nabla_b, nabla_w
 
 def sigmoid(z):
     return 1/(1+np.exp(-z))
