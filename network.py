@@ -1,5 +1,6 @@
 from __future__ import division
 import numpy as np
+import scipy.io
 
 class Network(object):
     def __init__(self, sizes):
@@ -12,13 +13,24 @@ class Network(object):
         return sum((x[1]- self.predict(x[0])**2) for x in training)/(2*len(training))
 
     def predict(self, x):
-        #self.biases
-        #self.weights
         for b, w in zip(self.biases, self.weights):
             x = sigmoid(np.dot(w,x)+b)
         return x
 
+    def sigmoid(z):
+        return 1/(1+np.exp(-z))
 
+def reshape_y(in_ys):
+    ys = np.zeros((len(in_ys), 10))
+    for i in xrange(len(in_ys)):
+        ys[i, in_ys[i]%10] = 1
+    return ys
 
-def sigmoid(z):
-    return 1/(1+np.exp(-z))
+data = scipy.io.loadmat('data/ex4data1.mat')
+#xys = zip(data['X'], data['y'])
+#np.random.shuffle(xys)
+#test, train = xys[:int(len(xys)/5)], xys[int(len(xys)/5):]
+#train_x, train_y = zip(*train)
+
+X, y = data['X'], reshape_y(data['y'])
+network = Network([X.shape[1], 25, 10])
