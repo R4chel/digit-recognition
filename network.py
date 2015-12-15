@@ -1,7 +1,7 @@
 from __future__ import division
-from operator import add
 import numpy as np
-import scipy.io
+from operator import add
+import pandas as pd
 
 class Network(object):
     def __init__(self, sizes, X, y, iters=1000, learning_rate=1):
@@ -78,7 +78,7 @@ def reshape_y(in_ys):
     return ys
 
 
-# TODO split into test and train data
-data = scipy.io.loadmat('data/ex4data1.mat')
-X, y = data['X'], reshape_y(data['y'])
+train_data = pd.read_csv('data/train_5000.csv', delimiter=',')
+y = reshape_y(train_data['label'].values)
+X = train_data.drop('label', 1).values
 network = Network([X.shape[1], 25, 10], X, y)
